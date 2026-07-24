@@ -12,8 +12,8 @@ import dill as pickle
 import shutil
 import sys
 import time
-from isee import interpret, process, initialize_charges, utilities
-from isee.infrastructure import factory, configure
+from isee_framework import interpret, process, initialize_charges, utilities
+from isee_framework.infrastructure import factory, configure
 
 # For profiling
 #import cProfile
@@ -156,7 +156,7 @@ def init_threads(settings):
                         initial_coordinates_to_mutate = initial_coordinates_to_mutate[initial_coordinates_to_mutate.rindex('/') + 1:]
                     new_inpcrd, new_top = utilities.mutate(initial_coordinates_to_mutate, settings.init_topology,
                                                            thread.history.muts[-1], initial_coordinates_to_mutate + '_' +
-                                                           '_'.join(thread.history.muts[-1]), settings)
+                                                           utilities.muts_to_current_name(thread, settings), settings)
                     try:
                         assert thread.history.inpcrd[-1] == new_inpcrd
                         assert thread.history.tops[-1] == new_top

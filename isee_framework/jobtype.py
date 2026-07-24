@@ -20,9 +20,9 @@ import warnings
 import copy
 import re
 import psutil
-from isee import utilities
-from isee import main
-from isee.infrastructure import factory
+from isee_framework import utilities
+from isee_framework import main
+from isee_framework.infrastructure import factory
 
 class JobType(abc.ABC):
     """
@@ -261,22 +261,25 @@ class isEE(JobType):
 
     def get_next_step(self, thread, settings):
         if thread.history.muts and thread.history.muts[-1]:
-            nextstep = '_'.join(thread.history.muts[-1])
-            if len(nextstep) > 200:     # danger of too-long filenames, will break on unix
-                def three2one(code):
-                    # Convert standard three-letter amino acid codes to one-letter codes
-                    all_3 = ['ARG', 'HIS', 'LYS', 'ASP', 'GLU', 'SER', 'THR', 'ASN', 'GLN', 'CYS', 'GLY', 'PRO', 'ALA',
-                             'VAL', 'ILE', 'LEU', 'MET', 'PHE', 'TYR', 'TRP']
-                    all_1 = ['R', 'H', 'K', 'D', 'E', 'S', 'T', 'N', 'Q', 'C', 'G', 'P', 'A', 'V', 'I', 'L', 'M', 'F',
-                             'Y', 'W']
-                    return all_1[all_3.index(code)]
+            nextstep = utilities.muts_to_current_name(thread, settings)
 
-                nextstep = '_'.join([item[:-3] + three2one(item[-3:]) for item in thread.history.muts[-1]])
-                if len(nextstep) > 200:
-                    nextstep = ''.join([item[:-3] + three2one(item[-3:]) for item in thread.history.muts[-1]])
-                    if len(nextstep) > 200:
-                        raise RuntimeError('List of mutations is too long, will cause filename issues: ' +
-                                           str(thread.history.muts[-1]))
+            # nextstep = '_'.join(thread.history.muts[-1])
+            # if len(nextstep) > 200:     # danger of too-long filenames, will break on unix
+            #     def three2one(code):
+            #         # Convert standard three-letter amino acid codes to one-letter codes
+            #         all_3 = ['ARG', 'HIS', 'LYS', 'ASP', 'GLU', 'SER', 'THR', 'ASN', 'GLN', 'CYS', 'GLY', 'PRO', 'ALA',
+            #                  'VAL', 'ILE', 'LEU', 'MET', 'PHE', 'TYR', 'TRP']
+            #         all_1 = ['R', 'H', 'K', 'D', 'E', 'S', 'T', 'N', 'Q', 'C', 'G', 'P', 'A', 'V', 'I', 'L', 'M', 'F',
+            #                  'Y', 'W']
+            #         return all_1[all_3.index(code)]
+            #
+            #     nextstep = '_'.join([item[:-3] + three2one(item[-3:]) for item in thread.history.muts[-1]])
+            #     if len(nextstep) > 200:
+            #         nextstep = ''.join([item[:-3] + three2one(item[-3:]) for item in thread.history.muts[-1]])
+            #         if len(nextstep) > 200:
+            #             raise RuntimeError('List of mutations is too long, will cause filename issues: ' +
+            #                                str(thread.history.muts[-1]))
+
             return nextstep
         else:
             return 'unmutated'
@@ -382,12 +385,13 @@ class isEE(JobType):
             mutations = ['']    # need to call mutate for WT to apply ts_bonds to the topology file
         else:
             mutations = next_step
-        new_inpcrd, new_top = utilities.mutate(initial_coordinates_to_mutate, settings.init_topology, mutations, initial_coordinates_to_mutate + '_' + '_'.join(next_step), settings)
 
-        # Update history and return
+        thread.history.muts.append(next_step)   # update muts history for use in muts_to_current_name
+        new_inpcrd, new_top = utilities.mutate(initial_coordinates_to_mutate, settings.init_topology, mutations, initial_coordinates_to_mutate + '_' + utilities.muts_to_current_name(thread, settings), settings)
+
+        # Update remaining history attributes and return
         thread.history.inpcrd.append(new_inpcrd)
         thread.history.tops.append(new_top)
-        thread.history.muts.append(next_step)
         thread.history.timestamps.append(time.time())
         thread.suffix += 1
 

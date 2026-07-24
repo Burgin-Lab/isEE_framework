@@ -57,13 +57,13 @@ def configure(input_file, user_working_directory=''):
         solver: str = 'sander'
         extra: str = 'None'
 
-        # File path settings (required for all jobs, but do have sensible defaults)
+        # File path settings (required for all jobs)
         path_to_input_files: str = os.path.dirname(os.path.realpath(__file__)) + '/data/input_files'
         path_to_templates: str = os.path.dirname(os.path.realpath(__file__)) + '/data/templates'
 
         # Settings for isEE jobtype
         degeneracy: int = 0     # todo: is this working?
-        skip_analyze: bool = False
+        skip_analyze: bool = True
         initial_coordinates: typing.List[str] = ['']    # todo: in isEE as currently written, each thread has to have the same initial coordinates, so either change that or change this
         ts_bonds: typing.Tuple[typing.List[str], typing.List[str], typing.List[float], typing.List[float]] = [[''],[''],[-1],[-1]]
         hmr: bool = False
@@ -96,7 +96,7 @@ def configure(input_file, user_working_directory=''):
         immutable: typing.List[int] = []
 
         # Stability model parameters
-        stability_model: str = 'ddgunmean'
+        stability_model: str = ''
         destabilization_cutoff: float = -3.0
 
         # Termination criteria
@@ -108,6 +108,7 @@ def configure(input_file, user_working_directory=''):
         resubmit_on_failure: int = 1    # resubmit this many times after failure
         nvidia_mps: int = 1
         mps_patient: bool = True    # if True, optimizes MPS efficiency by allowing different threads to use a single MPS job
+        name_as_timestamp: bool = False     # if True, default naming convention for files uses timestamp at creation
 
         # Custom Amber force fields, if required
         paths_to_forcefields: typing.List[str] = ['']

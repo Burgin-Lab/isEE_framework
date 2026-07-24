@@ -11,8 +11,8 @@ import time
 import parmed
 import re
 import copy
-from isee import main as iseemain
-from isee.process import process
+from isee_framework import main as iseemain
+from isee_framework.process import process
 
 def main(settings):
     """

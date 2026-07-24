@@ -17,15 +17,15 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-import isee
+import isee_framework
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'isEE'
-copyright = ("2020, Tucker Burgin. Project structure based on the "
+copyright = ("2026, Emme Burgin. Project structure based on the "
              "Computational Molecular Science Python Cookiecutter version 1.3")
-author = 'Tucker Burgin'
+author = 'Emme Burgin'
 
 # The short X.Y version
 version = ''
@@ -144,8 +144,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'isee.tex', 'isEE Documentation',
-     'isee', 'manual'),
+    (master_doc, 'isee_framework.tex', 'isEE Documentation',
+     'isee_framework', 'manual'),
 ]
 
 
@@ -154,7 +154,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'isee', 'isEE Documentation',
+    (master_doc, 'isee_framework', 'isEE Documentation',
      [author], 1)
 ]
 
@@ -165,8 +165,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'isee', 'isEE Documentation',
-     author, 'isee', 'Automated in silico enzyme evolution based on optimizing transition state binding energy in unbiased MD simulations.',
+    (master_doc, 'isee_framework', 'isEE Documentation',
+     author, 'isee_framework', 'Automated in silico enzyme evolution based on optimizing transition state binding energy in unbiased MD simulations.',
      'Miscellaneous'),
 ]
 

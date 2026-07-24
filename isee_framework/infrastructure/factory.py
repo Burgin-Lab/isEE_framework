@@ -2,12 +2,12 @@
 Factory script for obtaining the desired interfaces from the various interface scripts.
 """
 
-from isee import jobtype
-from isee import algorithm
-from isee import stabilitymodel
-from isee.infrastructure import mdengine
-from isee.infrastructure import batchsystem
-from isee.infrastructure import taskmanager
+from isee_framework import jobtype
+from isee_framework import algorithm
+from isee_framework import stabilitymodel
+from isee_framework.infrastructure import mdengine
+from isee_framework.infrastructure import batchsystem
+from isee_framework.infrastructure import taskmanager
 
 def mdengine_factory(mdengine_toolkit):
     """

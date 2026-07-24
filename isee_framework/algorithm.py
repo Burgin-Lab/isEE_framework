@@ -18,8 +18,8 @@ import itertools
 import subprocess
 import pandas as pd
 #import tensorflow as tf
-from isee.infrastructure import factory
-from isee import utilities
+from isee_framework.infrastructure import factory
+from isee_framework import utilities
 from math import factorial
 from filelock import Timeout, FileLock
 

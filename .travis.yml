@@ -42,7 +42,7 @@ install:
 
 
 script:
-  - pytest -v --cov=isee isee/tests/
+  - pytest -v --cov=isee_framework isee_framework/tests/
 
 notifications:
     email: false

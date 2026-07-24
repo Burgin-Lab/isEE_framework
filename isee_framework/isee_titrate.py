@@ -16,7 +16,7 @@ import fileinput
 from contextlib import contextmanager
 from moleculekit.molecule import Molecule
 from moleculekit.tools.preparation import proteinPrepare, systemPrepare
-from isee.utilities import mutate
+from isee_framework.utilities import mutate
 
 
 def main(rst, top):
@@ -26,7 +26,7 @@ def main(rst, top):
     Protons are added or removed as needed according to whether the pKa is above or below the titration pH indicated
     in the settings.pH value stored in the settings.pkl file stored in the local directory.
 
-    The actual adding or removing of protons is accomplished by calling isee.utilities.mutate (with no mutations), which
+    The actual adding or removing of protons is accomplished by calling isee_framework.utilities.mutate (with no mutations), which
     means that any relevant attributes of the loaded settings object (such as paths_to_forcefields, hmr, and min_steps)
     are passed along to that function.
 

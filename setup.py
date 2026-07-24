@@ -21,7 +21,7 @@ except:
 
 setup(
     # Self-descriptive entries which should always be present
-    name='isee',
+    name='isee_framework',
     author='Tucker Burgin',
     author_email='tburgin@umich.edu',
     description=short_description[0],

@@ -11,7 +11,7 @@ import time
 import pickle
 import shutil
 import warnings
-from isee.infrastructure import factory
+from isee_framework.infrastructure import factory
 
 def process(thread, running, allthreads, settings, inp_override=''):
     """

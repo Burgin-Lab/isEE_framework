@@ -20,7 +20,7 @@ import dill as pickle   # I think this is kosher!
 from simtk.openmm.app import *
 from simtk.openmm import *
 from simtk.unit import *
-from isee.initialize_charges import set_charges
+from isee_framework.initialize_charges import set_charges
 # from main import Thread
 
 # Two different ways to import tleap depending on, I think, paprika version
@@ -761,6 +761,64 @@ def strip_and_store(traj, top, settings):
     pytraj.write_parm(settings.storage_directory + '/' + dry_top_name, ptop, overwrite=True)    # save it to storage
 
     return settings.storage_directory + '/' + dry_traj_name, settings.storage_directory + '/' + dry_top_name
+
+
+def muts_to_current_name(thread, settings):
+    """
+    From the last entry in a Thread's history.muts object, construct a string for use as its next current_name.
+
+    Necessary to handle arbitrary-length lists of mutations without potentially running into file name length limits.
+
+    Parameters
+    ----------
+    thread : Thread
+        Thread object
+    settings : argparse.Namespace
+        Settings namespace
+
+    Returns
+    -------
+    current_name : str
+        Unique name derived from mutation list
+    """
+
+    def get_timestamp():
+        if not os.path.exists('timestamp_name_list.txt'):
+            open('timestamp_name_list.txt', 'w').close()
+
+        for line in open('timestamp_name_list.txt', 'r').readlines():
+            if thread.name + '_' + '_'.join(thread.history.muts[-1]) in line:
+                return line.split()[1]
+
+        timestamp = str(time.time())
+        open('timestamp_name_list.txt', 'a').write(
+            thread.name + '_' + '_'.join(thread.history.muts[-1]) + '\t' + timestamp)
+
+        return timestamp
+
+    if settings.name_as_timestamp:
+        return get_timestamp()
+
+    # Evaluate max length of string based on other thread attributes
+    # Assume total length = thread.name + 30
+    reserved_length = len(thread.name) + 30
+    max_length = 256 - reserved_length
+    if len('_'.join(thread.history.muts[-1])) < max_length:
+        return '_'.join(thread.history.muts[-1])
+
+    def three2one(code):
+        # Convert three-letter amino acid codes to one-letter codes
+        all_3 = ['ARG', 'HIS', 'LYS', 'ASP', 'GLU', 'SER', 'THR', 'ASN', 'GLN', 'CYS', 'GLY', 'PRO', 'ALA',
+                 'VAL', 'ILE', 'LEU', 'MET', 'PHE', 'TYR', 'TRP']
+        all_1 = ['R', 'H', 'K', 'D', 'E', 'S', 'T', 'N', 'Q', 'C', 'G', 'P', 'A', 'V', 'I', 'L', 'M', 'F',
+                 'Y', 'W']
+        return all_1[all_3.index(code)]
+
+    ones = '_'.join([item[:-3] + three2one(item[-3:]) for item in thread.history.muts[-1]])
+    if len(ones) < max_length:
+        return ones
+
+    return get_timestamp()
 
 
 if __name__ == '__main__':
