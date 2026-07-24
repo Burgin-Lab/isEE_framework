@@ -76,6 +76,8 @@ def configure(input_file, user_working_directory=''):
         treat_as_protein: typing.List[str] = ['']  # list of strings of non-standard resnames to treat as protein
         keep_waters: bool = False   # if True, all waters in the initial structure are kept during mutation and solvation is skipped
         tleap_extra: str = ''   # custom lines to include in tleap template after building "model" object
+        shared_history_file: str = ''
+        skip_wt: bool = False
 
         # Initialize charges settings
         initialize_charges: bool = False    # if True, a single step of QM simulation is used to reinitialize charges in ic_qm_mask before each simulation
@@ -88,27 +90,10 @@ def configure(input_file, user_working_directory=''):
         # For algorithm = 'script'
         mutation_script: typing.List[typing.List[str]] = []
 
-        # For algorithms 'monte_carlo', 'covariance_saturation', and 'subnetwork_hotspots'
-        covariance_reference_resid: int = -1
-        immutable: typing.List[int] = []
-
-        # For algorithm = 'monte_carlo'
+        # For algorithm = 'random'
         min_plurality: int = 1
         max_plurality: int = 3
-        plural_penalty: float = 1
-        skip_wt: bool = False
-        shared_history_file: str = ''
-
-        # For algorithm = 'predictor_guided'
-        imported_history_file: str = ''     # todo: should this be combined with shared_history_file?
-
-        # Linear Interaction Energy parameters
-        ts_mask: str = ''
-        lie_mask: str = ''
-        lie_alpha: float = 0.18
-        lie_beta: float = 0.33
-        lie_dry: bool = True
-        lie_decomposed: bool = False
+        immutable: typing.List[int] = []
 
         # Stability model parameters
         stability_model: str = 'ddgunmean'

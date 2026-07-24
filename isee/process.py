@@ -146,10 +146,6 @@ def process(thread, running, allthreads, settings, inp_override=''):
             thread.mps_idle = True	# but it's idle for now!
             return running
 
-    #todo: I have introduced a problem here where now multiple threads can have their jobs submitted by a single call to
-    #todo: process(). This necessitates a different approach to managing jobids and/or the gatekeeper function.
-    #todo: track thread index in temp file?
-
     # Prepare task manager to submit batch files to
     taskmanager = factory.taskmanager_factory(settings.task_manager)
     for threadi in threadis:

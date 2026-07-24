@@ -1,6 +1,6 @@
 """
 A standalone script that titrates the input structure (given in the form of an .rst7 and a .prmtop) according to the
-predictions from propka3 and the settings stored in the settings.pkl file in the local directory. This script modifies
+predictions from propka and the settings stored in the settings.pkl file in the local directory. This script modifies
 the input files in place.
 """
 

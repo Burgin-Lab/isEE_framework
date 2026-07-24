@@ -134,10 +134,6 @@ def algorithm_factory(algorithm_toolkit):
     algorithm_toolkit = algorithm_toolkit.lower()
 
     algorithm_toolkits = {'script': algorithm.Script(),
-                          'covariance_saturation': algorithm.CovarianceSaturation(),
-                          'subnetwork_hotspots': algorithm.SubnetworkHotspots(),
-                          'monte_carlo': algorithm.MonteCarlo(),
-                          'predictor_guided': algorithm.PredictorGuided(),
                           'random': algorithm.Random()}
 
     if algorithm_toolkit not in algorithm_toolkits.keys():
@@ -165,7 +161,7 @@ def stability_model_factory(stability_model_toolkit):
     stability_model_toolkit = stability_model_toolkit.lower()
 
     stability_model_toolkits = {'ddgunmean': stabilitymodel.DDGunMean(),
-                               'ddgun3d': stabilitymodel.DDGun3D()}
+                                'ddgun3d': stabilitymodel.DDGun3D()}
 
     if stability_model_toolkit not in stability_model_toolkits.keys():
         raise ValueError('unsupported StabilityModel name: ' + stability_model_toolkit)

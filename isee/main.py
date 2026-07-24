@@ -14,7 +14,9 @@ import sys
 import time
 from isee import interpret, process, initialize_charges, utilities
 from isee.infrastructure import factory, configure
-import cProfile
+
+# For profiling
+#import cProfile
 
 
 class Thread(object):
@@ -96,8 +98,7 @@ def init_threads(settings):
     Initialize all the Thread objects called for by the user input file.
 
     In the case where settings.restart == True, this involves unpickling restart.pkl; otherwise, brand new objects are
-    produced in accordance with settings.job_type (aimless_shooting, committor_analysis, equilibrium_path_sampling, or
-    isee).
+    produced in accordance with settings.job_type
 
     Parameters
     ----------
@@ -229,18 +230,16 @@ def handle_loop_exception(running, exception, settings):
 
     """
 
-    print('\nCancelling currently running batch jobs belonging to this process in order to '
-          'preserve resources.')
+    print('\nCancelling currently running batch jobs belonging to this process in order to preserve resources.')
     for thread in running:
         try:
             for job_index in range(len(thread.jobids)):
                 thread.cancel_job(job_index, settings)
-        except Exception as little_e:
-            print('\nEncountered an additional exception while attempting to cancel a job: ' + str(little_e) +
+        except Exception as e:
+            print('\nEncountered an additional exception while attempting to cancel a job: ' + str(e) +
                   '\nIgnoring and continuing...')
 
     print('Job cancellation complete, isEE is now shutting down. The full exception that triggered this was: ')
-
     raise exception
 
 
@@ -280,14 +279,6 @@ def main_function(settings):
         else:
             raise RuntimeError('Working directory ' + settings.working_directory + ' does not yet exist, but '
                                'restart = True.')
-
-    # if settings.shared_history_file and not settings.restart:
-    #     if os.path.exists(settings.shared_history_file) and settings.overwrite:
-    #         os.remove(settings.shared_history_file)
-    #     elif os.path.exists(settings.shared_history_file):
-    #         raise RuntimeError('the specified shared history file: ' + settings.shared_history_file + ' already exists,'
-    #                            ' but neither overwrite nor restart are set to True. Change the appropriate setting or '
-    #                            'else move or delete the shared history file.')
 
     # Store settings object in the working directory for compatibility with analysis/utility scripts
     if not settings.dont_dump:
@@ -382,14 +373,9 @@ def run_main():
     exit_message = main_function(settings)
     print(exit_message)
 
+
 if __name__ == "__main__":
-    cProfile.run('run_main()')
-#if __name__ == '__main__':
-#    import cProfile
-#    # if check avoids hackery when not profiling
-#    # Optional; hackery *seems* to work fine even when not profiling, it's just wasteful
-#    if sys.modules['__main__'].__file__ == cProfile.__file__:
-#        import isee  # Imports you again (does *not* use cache or execute as __main__)
-#        globals().update(vars(isee))  # Replaces current contents with newly imported stuff
-#        sys.modules['__main__'] = isee  # Ensures pickle lookups on __main__ find matching version
-#    run_main()  # Or series of statements
+    run_main()
+
+    # For profiling
+    #cProfile.run('run_main()')

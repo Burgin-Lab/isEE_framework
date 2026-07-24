@@ -320,37 +320,32 @@ class isEE(JobType):
                 thread.history.trajs[thread.suffix].append(kwargs['nc'])
 
     def analyze(self, thread, settings):
+        # This is mostly vestigial, but I'm leaving it in for now as it could be useful in the future.
+        # This function executes at the end of every step and is meant to facilitate running analyses during the run
+        # rather than needing to handle analysis separately after the fact.
+        # Right now all it can do is strip solvent for more efficient storage.
+
         if settings.degeneracy > 1: # todo: fix (I don't know what the problem is, if there even still is one)
             print('skipping analyze step because it is currently incompatible with degeneracy > 1. This also means that'
-                  ' the storage directory (if specified) will not be created. Do your analysis manually.')
+                  ' the storage directory (if specified) will not be created.')
             return True
         elif settings.skip_analyze:
             return True
-        if not settings.SPOOF:  # default behavior
-            if not all([os.path.exists(traj) for traj in thread.history.trajs[-1]]) or any([pytraj.iterload(traj, thread.history.tops[-1]).n_frames == 0 for traj in thread.history.trajs[-1]]):     # if the simulation didn't produce a trajectory
-                return False
-            if settings.storage_directory:  # move a 'dry' copy to storage, if we have a storage directory
-                try:
-                    dry_trajs = []
-                    for traj in thread.history.trajs[-1]:
-                        dry_traj, dry_top = utilities.strip_and_store(traj, thread.history.tops[-1], settings)   # I honestly have no idea why thread.history.trajs[-1] is a list here when it was a string just before?
-                        dry_trajs.append(dry_traj)
-                except:
-                    raise RuntimeError('strip_and_store failed with files: ' + thread.history.trajs[-1][0] + ' and ' +
-                                       thread.history.tops[-1])
-                thread.history.score.append(utilities.lie(dry_traj, dry_top, settings))
+        if settings.SPOOF:
+            return True
 
-                # Write results in a human-readable format
-                if not os.path.exists(settings.storage_directory + '/results.out'):
-                    open(settings.storage_directory + '/results.out', 'w').close()
+        if not all([os.path.exists(traj) for traj in thread.history.trajs[-1]]) or any([pytraj.iterload(traj, thread.history.tops[-1]).n_frames == 0 for traj in thread.history.trajs[-1]]):     # if the simulation didn't produce a trajectory
+            return False
 
-                with open(settings.storage_directory + '/results.out', 'a') as f:
-                    f.write(str(thread.history.muts[-1]) + ': ' + str(thread.history.score[-1]) + '\n')
-
-            else:
-                thread.history.score.append(utilities.lie(thread.history.trajs[-1][0], thread.history.tops[-1], settings))
-        else:   # spoof behavior
-            thread.history.score.append(utilities.score_spoof(settings.seq, settings.rmsd_covar, settings))
+        if settings.storage_directory:  # move a 'dry' copy to storage, if we have a storage directory
+            try:
+                dry_trajs = []
+                for traj in thread.history.trajs[-1]:
+                    dry_traj, dry_top = utilities.strip_and_store(traj, thread.history.tops[-1], settings)   # I honestly have no idea why thread.history.trajs[-1] is a list here when it was a string just before?
+                    dry_trajs.append(dry_traj)
+            except:
+                raise RuntimeError('strip_and_store failed with files: ' + thread.history.trajs[-1][0] + ' and ' +
+                                   thread.history.tops[-1])
 
         return True
 
@@ -378,8 +373,7 @@ class isEE(JobType):
             return False        # False: do not globally terminate
 
         # Perform desired mutation
-        # todo: implement possibility of mutating using something other than initial coordinates/topology as a base?
-        if '/' in settings.init_topology:   # todo: this shouldn't be necessary because it should already be done in main.init_threads
+        if '/' in settings.init_topology:   # this shouldn't be necessary because it should already be done in main.init_threads, but can't hurt
             settings.init_topology = settings.init_topology[settings.init_topology.rindex('/') + 1:]
         initial_coordinates_to_mutate = settings.initial_coordinates[0]
         if '/' in initial_coordinates_to_mutate:
@@ -429,17 +423,20 @@ class isEE(JobType):
                 # If problem persists...
                 if all([this_thread.idle for this_thread in allthreads]):
                     raise RuntimeError('all threads are in an idle state, which means something must have gone wrong. '
-                                   'Inspect the restart.pkl file for errors.')
+                                       'Inspect the restart.pkl file for errors.')
+
             this_algorithm = factory.algorithm_factory(settings.algorithm)
             return this_algorithm.reevaluate_idle(thread, allthreads)
-        elif thread.mps_idle:	# special state for idling caused by mps_patient
-        	return False
+        elif thread.mps_idle:   # special state for idling caused by mps_patient
+            return False
 
-        assert len(thread.jobids) > 0
+        try:
+            assert len(thread.jobids) > 0
+        except AssertionError:
+            raise RuntimeError('Tried to run gatekeeper on a thread with no assigned jobids.')
 
         # If job for this thread has status 'C'ompleted/'C'anceled...
         if all([thread.get_status(ii, settings) == 'C' for ii in range(len(thread.jobids))]):
-            # todo: implement restarting if simulation crashed before a certain number of steps completed?
             return True
         else:
             return False
