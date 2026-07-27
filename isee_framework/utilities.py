@@ -21,13 +21,13 @@ from simtk.openmm.app import *
 from simtk.openmm import *
 from simtk.unit import *
 from isee_framework.initialize_charges import set_charges
-# from main import Thread
 
 # Two different ways to import tleap depending on, I think, paprika version
 try:
     from paprika.build.system import TLeap as tleap
 except ModuleNotFoundError:
     from paprika import tleap
+
 
 def update_progress(progress, message='Progress', eta=0, quiet=False):
     """

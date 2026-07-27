@@ -10,6 +10,7 @@ import math
 import time
 import pickle
 import shutil
+import pathlib
 import warnings
 from isee_framework.infrastructure import factory
 
@@ -63,9 +64,22 @@ def process(thread, running, allthreads, settings, inp_override=''):
     threadis = [allthreads.index(thread)]
 
     if not inp_override:
-        inp = jobtype.get_input_file(thread, settings)
+        (inps) = jobtype.get_input_file(thread, settings)
     else:
-        inp = inp_override
+        (inps) = inp_override
+
+    inp = inps[0]
+    try:
+        heat_inp = inps[1]
+    except IndexError:
+        heat_inp = None
+    try:
+        min_inp = inps[2]
+    except IndexError:
+        min_inp = None
+
+    # Point to the copy of isee_titrate co-located in the directory containing this file
+    isee_titrate_path = pathlib.Path(__file__).parent.resolve() + '/' + 'isee_titrate.py'
 
     if settings.degeneracy and not name == 'ic':
         degeneracy = ['_' + str(ii) for ii in range(settings.degeneracy)]
@@ -90,7 +104,10 @@ def process(thread, running, allthreads, settings, inp_override=''):
                          'working_directory': settings.working_directory,
                          'extra': eval(settings.extra),
                          'degen': degen,
-                         'mps': '{{ mps }}'}
+                         'mps': '{{ mps }}',
+                         'min_inp': min_inp,
+                         'heat_inp': heat_inp,
+                         'isee_titrate': isee_titrate_path}
 
         filled = template.render(these_kwargs)
         newfilename = thread.name + '_' + name + degen + '.' + settings.batch_system
@@ -98,14 +115,10 @@ def process(thread, running, allthreads, settings, inp_override=''):
             with open(newfilename, 'w') as newfile:
                 newfile.write(filled)
                 newfile.close()
-        except OSError as e:    # todo: can I come up with a fix for this before it's too late this time? I suppose the only real fix would be to name batch files using some code scheme and store a map of which names correspond to what in the history attributes of the corresponding threads (and also probably elsewhere)
+        except OSError as e:
             if 'name too long' in str(e):
-                warnings.warn('Encountered too-long filename: ' + newfilename + '. Skipping submission of this thread '
-                              'to the task manager, terminating it, and continuing. Consider renaming a sample of the '
-                              'initial coordinate files you like best and starting a new isEE run. If this limitation '
-                              'is a problem for you, please raise an issue on GitHub detailing your use-case.')
-                thread.terminated = True
-                return running
+                raise RuntimeError('Encountered too-long filename: ' + newfilename + '. You can avoid this by setting'
+                                   'name_as_timestamp = True in the config file.')
             else:
                 raise e
 

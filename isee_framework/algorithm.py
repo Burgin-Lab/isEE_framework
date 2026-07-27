@@ -17,11 +17,11 @@ import argparse
 import itertools
 import subprocess
 import pandas as pd
-#import tensorflow as tf
-from isee_framework.infrastructure import factory
-from isee_framework import utilities
 from math import factorial
 from filelock import Timeout, FileLock
+from isee_framework import utilities
+from isee_framework.infrastructure import factory
+
 
 class Algorithm(abc.ABC):
     """

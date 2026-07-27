@@ -19,7 +19,7 @@ import mdtraj
 import warnings
 import copy
 import re
-import psutil
+#import psutil
 from isee_framework import utilities
 from isee_framework import main
 from isee_framework.infrastructure import factory
@@ -75,10 +75,13 @@ class JobType(abc.ABC):
     @abc.abstractmethod
     def get_input_file(self, thread, settings):
         """
-        Obtain appropriate input file for next job.
+        Obtain path(s) to appropriate input file(s) for next job.
 
         At its most simple, implementations of this method can simply return settings.path_to_input_files + '/' +
         settings.job_type + '_' + settings.md_engine + '.in'
+
+        If more than one input file is returned, they are interpreted as the production input file, then the heat input
+        file, then the minimization input file. No more than three returned files will be used.
 
         Parameters
         ----------
@@ -90,7 +93,11 @@ class JobType(abc.ABC):
         Returns
         -------
         input_file : str
-            Name of the applicable input file
+            Path to the production input file
+        heat_input_file : str
+            Path to the heat input file
+        min_input_file : str
+            Path to the minimization input file
 
         """
 
@@ -285,7 +292,7 @@ class isEE(JobType):
             return 'unmutated'
 
     def get_input_file(self, thread, settings):
-        return settings.path_to_input_files + '/' + settings.job_type + '_' + settings.md_engine + '.in'
+        return settings.path_to_input_files + '/' + settings.job_type + '_' + settings.md_engine + '.in', settings.path_to_input_files + '/heat_' + settings.md_engine + '.in', settings.path_to_input_files + '/min_' + settings.md_engine + '.in',
 
     def get_batch_template(self, settings):
         templ = settings.md_engine + '_' + settings.batch_system + '.tpl'
