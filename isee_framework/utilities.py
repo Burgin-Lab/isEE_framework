@@ -17,9 +17,12 @@ import shutil
 import argparse
 import fileinput
 import dill as pickle   # I think this is kosher!
-from simtk.openmm.app import *
-from simtk.openmm import *
-from simtk.unit import *
+# try:
+#     from simtk.openmm.app import *
+#     from simtk.openmm import *
+#     from simtk.unit import *
+# except ImportError:
+#     from openmm import *
 from isee_framework.initialize_charges import set_charges
 
 # Two different ways to import tleap depending on, I think, paprika version
@@ -615,6 +618,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
         mutated_top = set_charges(mutated_top)
 
     if settings.min_steps > 0:
+        raise RuntimeError('OpenMM minimization temporarily disabled.')
         ### Minimize with OpenMM
         # First, cast .prmtop to OpenMM topology todo: replace Amber-specific stuff with call to method of MDEngine that returns an OpenMM Simulation object
         openmm_top = AmberPrmtopFile(mutated_top)

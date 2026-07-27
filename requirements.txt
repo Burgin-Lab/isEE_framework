@@ -8,5 +8,4 @@ setuptools~=67.8.0
 moleculekit
 dill
 jinja2
-simtk
 paprika

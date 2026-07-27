@@ -1,6 +1,6 @@
 """
-isEE
-Automated in silico enzyme evolution based on optimizing transition state binding energy in unbiased MD simulations.
+isEE_framework
+Framework for high-throughput MD simulations of protein variants with Amber.
 """
 import sys
 from setuptools import setup, find_packages
@@ -22,8 +22,8 @@ except:
 setup(
     # Self-descriptive entries which should always be present
     name='isee_framework',
-    author='Tucker Burgin',
-    author_email='tburgin@umich.edu',
+    author='T. Emme Burgin',
+    author_email='emme.burgin@dartmouth.edu',
     description=short_description[0],
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -46,7 +46,18 @@ setup(
 
     # Additional entries you may want simply uncomment the lines you want and fill in the data
     # url='http://www.my_package.com',  # Website
-    install_requires=['pydantic'],              # Required packages, pulls from pip if needed; do not use for Conda deployment
+    install_requires=['numpy~=1.24.3',
+                      'pytraj~=2.0.6',
+                      'mdtraj',
+                      'pandas~=2.1.1',
+                      'parmed~=4.2.2',
+                      'filelock',
+                      'setuptools',
+                      'moleculekit',
+                      'dill',
+                      'jinja2',
+                      #'openmm',
+                      'paprika'],              # Required packages, pulls from pip if needed; do not use for Conda deployment
     # platforms=['Linux',
     #            'Mac OS-X',
     #            'Unix',
