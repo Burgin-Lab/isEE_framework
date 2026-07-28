@@ -10,6 +10,7 @@ from . import process
 from . import utilities
 from . import algorithm
 from . import initialize_charges
+from . import isee_framework
 from isee_framework.infrastructure import configure
 from isee_framework.infrastructure import batchsystem
 from isee_framework.infrastructure import factory

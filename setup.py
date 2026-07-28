@@ -30,6 +30,12 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     license='BSD-3-Clause',
+    scripts=['isee_framework/isee_framework.py'],
+    entry_points={
+        'console_scripts': [
+            'isee = isee_framework.main:run_main',
+        ],
+    },
 
     # Which Python importable modules should be included when your package is installed
     # Handled automatically by setuptools. Use 'exclude' to prevent some specific
@@ -55,9 +61,7 @@ setup(
                       'setuptools',
                       'moleculekit',
                       'dill',
-                      'jinja2',
-                      #'openmm',
-                      'paprika'],              # Required packages, pulls from pip if needed; do not use for Conda deployment
+                      'jinja2'],              # Required packages, pulls from pip if needed; do not use for Conda deployment
     # platforms=['Linux',
     #            'Mac OS-X',
     #            'Unix',
