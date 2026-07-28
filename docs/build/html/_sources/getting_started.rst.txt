@@ -36,7 +36,7 @@ Invoking isEE_framework
 
 isEE_framework is invoked on the command line as:
 
-``isee_framework [config] [[working_directory]]``
+``python /path/to/isee_framework.main.py [config] [[working_directory]]``
 
 The first argument, which points to a configuration file (see :ref:`configuration_file`) is required. The second, which defines the directory in which isEE_framework will run its simulations and analyses, is optional (it can also be defined in the configuration file), but setting it on the command line at runtime may be necessary on certain compute cluster configurations where working/scratch space is defined only when a job begins.
 

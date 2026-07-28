@@ -99,7 +99,7 @@
 <section id="invoking-isee-framework">
 <h2>Invoking isEE_framework<a class="headerlink" href="#invoking-isee-framework" title="Link to this heading"></a></h2>
 <p>isEE_framework is invoked on the command line as:</p>
-<p><code class="docutils literal notranslate"><span class="pre">isee_framework</span> <span class="pre">[config]</span> <span class="pre">[[working_directory]]</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">/path/to/isee_framework.main.py</span> <span class="pre">[config]</span> <span class="pre">[[working_directory]]</span></code></p>
 <p>The first argument, which points to a configuration file (see <a class="reference internal" href="configuration_file.html#configuration-file"><span class="std std-ref">The Configuration File</span></a>) is required. The second, which defines the directory in which isEE_framework will run its simulations and analyses, is optional (it can also be defined in the configuration file), but setting it on the command line at runtime may be necessary on certain compute cluster configurations where working/scratch space is defined only when a job begins.</p>
 <p>On batch-managed systems it is typical to run isee_framework as a batch job, but there is no need to allocate extensive resources to that job. isEE_framework will submit additional jobs with their own resource requests. You need only ensure that the main isee_framework job has sufficient walltime for all the simulations that you want to run, since it will persist during the entire runtime of the program.</p>
 </section>
