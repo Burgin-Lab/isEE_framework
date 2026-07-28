@@ -30,7 +30,7 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     license='BSD-3-Clause',
-    scripts=['isee_framework/isee_framework.py'],
+    scripts=['isee_framework/isee.py'],
     entry_points={
         'console_scripts': [
             'isee = isee_framework.main:run_main',
@@ -61,7 +61,8 @@ setup(
                       'setuptools',
                       'moleculekit',
                       'dill',
-                      'jinja2'],              # Required packages, pulls from pip if needed; do not use for Conda deployment
+                      'jinja2',
+                      'pydantic'],              # Required packages, pulls from pip if needed; do not use for Conda deployment
     # platforms=['Linux',
     #            'Mac OS-X',
     #            'Unix',

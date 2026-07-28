@@ -335,7 +335,7 @@ class isEE(JobType):
         # rather than needing to handle analysis separately after the fact.
         # Right now all it can do is strip solvent for more efficient storage.
 
-        if settings.degeneracy > 1: # todo: fix (I don't know what the problem is, if there even still is one)
+        if settings.degeneracy > 1:
             print('skipping analyze step because it is currently incompatible with degeneracy > 1. This also means that'
                   ' the storage directory (if specified) will not be created.')
             return True

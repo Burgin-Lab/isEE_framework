@@ -54,7 +54,7 @@ def configure(input_file, user_working_directory=''):
         ppn: int = 1
         mem: str = '4000mb'
         walltime: str = '02:00:00'
-        solver: str = 'sander'
+        solver: str = 'pmemd.cuda'
         extra: str = 'None'
 
         # File path settings (required for all jobs)
@@ -62,7 +62,7 @@ def configure(input_file, user_working_directory=''):
         path_to_templates: str = os.path.dirname(os.path.realpath(__file__)) + '/data/templates'
 
         # Settings for isEE jobtype
-        degeneracy: int = 0     # todo: is this working?
+        degeneracy: int = 0
         skip_analyze: bool = True
         initial_coordinates: typing.List[str] = ['']    # todo: in isEE as currently written, each thread has to have the same initial coordinates, so either change that or change this
         ts_bonds: typing.Tuple[typing.List[str], typing.List[str], typing.List[float], typing.List[float]] = [[''],[''],[-1],[-1]]
@@ -83,7 +83,7 @@ def configure(input_file, user_working_directory=''):
         initialize_charges: bool = False    # if True, a single step of QM simulation is used to reinitialize charges in ic_qm_mask before each simulation
         ic_qm_mask: str = ''
         ic_qm_theory: str = 'DFTB3'
-        ic_qm_cut: float = 8.0
+        ic_qm_cut: float = 12.0
         ic_qm_charge: int = 0
         ic_dftb_telec: float = 0
 

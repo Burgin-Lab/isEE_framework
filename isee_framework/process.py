@@ -79,7 +79,7 @@ def process(thread, running, allthreads, settings, inp_override=''):
         min_inp = None
 
     # Point to the copy of isee_titrate co-located in the directory containing this file
-    isee_titrate_path = pathlib.Path(__file__).parent.resolve() + '/' + 'isee_titrate.py'
+    isee_titrate_path = str(pathlib.Path(__file__).parent.resolve()) + '/' + 'isee_titrate.py'
 
     if settings.degeneracy and not name == 'ic':
         degeneracy = ['_' + str(ii) for ii in range(settings.degeneracy)]
