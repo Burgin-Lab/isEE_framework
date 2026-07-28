@@ -1,0 +1,146 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started &mdash; isEE  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Configuration File" href="configuration_file.html" />
+    <link rel="prev" title="Documentation for isEE_framework" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            isEE
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#invoking-isee-framework">Invoking isEE_framework</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#settings-up-input-and-template-files">Settings up input and template files</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_file.html">The Configuration File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wishlist.html">Wishlist</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">isEE</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/getting_started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p>isEE_framework has a couple of unclean dependencies that have not been resolved yet. I have streamlined it as much as possible without refactoring large portions of the code for now. The following instructions are the best option for now until pAPRika and pytraj can be excised from the dependency chain.</p>
+<p>First, ensure that Amber22 is sourced (so that pytraj is available):</p>
+<p><code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">/path/to/amber22/amber.sh</span></code></p>
+<p>Then, create a new conda environment that uses exactly Python version 3.11:</p>
+<p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span> <span class="pre">--prefix=/path/to/new-environment</span> <span class="pre">python=3.11</span></code></p>
+<p>isEE_framework itself can be built from the pre-packaged wheel file located in <code class="docutils literal notranslate"><span class="pre">isEE_framework/dist</span></code>:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">isee_framework-[version_number]-py3-none-any.whl</span></code></p>
+<p>After, you must also install the pAPRika package from conda-forge. Note that this package has a name clash with an unrelated package on PyPI, so you cannot use pip to install it.</p>
+<p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">conda-forge</span> <span class="pre">paprika</span></code></p>
+<p>You may need to follow this up with updating the version of numpy:</p>
+<p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">update</span> <span class="pre">numpy</span></code></p>
+<p>Finally, install pyrosetta from its dedicated conda channel:</p>
+<p><code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">pyrosetta</span> <span class="pre">-c</span> <span class="pre">https://levinthal:paradox&#64;conda.graylab.jhu.edu</span></code></p>
+</section>
+<section id="invoking-isee-framework">
+<h2>Invoking isEE_framework<a class="headerlink" href="#invoking-isee-framework" title="Link to this heading"></a></h2>
+<p>isEE_framework is invoked on the command line as:</p>
+<p><code class="docutils literal notranslate"><span class="pre">isee_framework</span> <span class="pre">[config]</span> <span class="pre">[[working_directory]]</span></code></p>
+<p>The first argument, which points to a configuration file (see <a class="reference internal" href="configuration_file.html#configuration-file"><span class="std std-ref">The Configuration File</span></a>) is required. The second, which defines the directory in which isEE_framework will run its simulations and analyses, is optional (it can also be defined in the configuration file), but setting it on the command line at runtime may be necessary on certain compute cluster configurations where working/scratch space is defined only when a job begins.</p>
+<p>On batch-managed systems it is typical to run isee_framework as a batch job, but there is no need to allocate extensive resources to that job. isEE_framework will submit additional jobs with their own resource requests. You need only ensure that the main isee_framework job has sufficient walltime for all the simulations that you want to run, since it will persist during the entire runtime of the program.</p>
+</section>
+<section id="settings-up-input-and-template-files">
+<h2>Settings up input and template files<a class="headerlink" href="#settings-up-input-and-template-files" title="Link to this heading"></a></h2>
+<p>In addition to the configuration file, the most important files to setup in advance are MD input files and batch job template files. These files should be located in two separate directories that will be indicated in the configuration file.</p>
+<p>The input files directory should contain all of the MD input files for your simulations. For simulations using Amber, typically this consists of three files: <code class="docutils literal notranslate"><span class="pre">min_amber.in</span></code> (an energy minimization), <code class="docutils literal notranslate"><span class="pre">heat_amber.in</span></code> (an NVT heating simulation), and <code class="docutils literal notranslate"><span class="pre">isee_amber.in</span></code> (an equilibration/production simulation). These should be configured however you desire for your simulations.</p>
+<p>The template files directory is used by isee_framework to set up batch jobs. Template slots denoted by double curly braces (<code class="docutils literal notranslate"><span class="pre">{{</span> <span class="pre">example</span> <span class="pre">}}</span></code>) are parsed and replaced as appropriate for each simulation by isEE_framework. Template files are named as <code class="docutils literal notranslate"><span class="pre">[md_engine]_[batch_system].tpl</span></code>; so for example, for Amber simulations on a Slurm batch system, the template file should be named: <code class="docutils literal notranslate"><span class="pre">amber_slurm.tpl</span></code>. There is also a separate, optional file for use with the charge initialization option (see options starting with <code class="docutils literal notranslate"><span class="pre">ic_</span></code> in the configuration file documentation), named as <code class="docutils literal notranslate"><span class="pre">[md_engine]_initialize_charges_[batch_system].tpl</span></code> (so, e.g., <code class="docutils literal notranslate"><span class="pre">amber_init_charges_slurm.tpl</span></code>)</p>
+<p>The recommended way to put together these files is to modify the examples provided in <code class="docutils literal notranslate"><span class="pre">isEE_framework/isee_framework/data</span></code>. Two Slurm examples are provided: one configured for use with NVIDIA MPS (see <a class="reference internal" href="configuration_file.html#nvidia-mps"><span class="std std-ref">NVIDIA MPS Settings</span></a>) and one without. In either case, you should modify the preamble (lines starting with #SLURM) and add anything else necessary for compatibility with your batch system, but leave the rest of the content untouched unless you are sure that you know what you’re doing.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Documentation for isEE_framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="configuration_file.html" class="btn btn-neutral float-right" title="The Configuration File" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Emme Burgin. Project structure based on the Computational Molecular Science Python Cookiecutter version 1.3.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
