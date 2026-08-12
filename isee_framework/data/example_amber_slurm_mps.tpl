@@ -9,8 +9,8 @@
 #SBATCH --time={{ walltime }}
 
 set -e
-export CUDA_MPS_PIPE_DIRECTORY={{mps_dir}}/nvidia-mps_{{ mps }}
-export CUDA_MPS_LOG_DIRECTORY={{mps_dir}}/nvidia-log_{{ mps }}
+export CUDA_MPS_PIPE_DIRECTORY={{ mps_dir }}/nvidia-mps_{{ mps }}
+export CUDA_MPS_LOG_DIRECTORY={{ mps_dir }}/nvidia-log_{{ mps }}
 nvidia-cuda-mps-control -d
 
 export CUDA_MPS_PIPE_DIRECTORY={{mps_dir}}/nvidia-mps_{{ mps }}

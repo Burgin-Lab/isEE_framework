@@ -108,6 +108,7 @@ def configure(input_file, user_working_directory=''):
         resubmit_on_failure: int = 1    # resubmit this many times after failure
         nvidia_mps: int = 1
         mps_patient: bool = True    # if True, optimizes MPS efficiency by allowing different threads to use a single MPS job
+        mps_dir: str = ''   # Path to where to store mps files
         name_as_timestamp: bool = False     # if True, default naming convention for files uses timestamp at creation
 
         # Custom Amber force fields, if required
@@ -159,6 +160,8 @@ def configure(input_file, user_working_directory=''):
         settings.path_to_templates = settings.path_to_templates[:-1]
     if settings.storage_directory[-1] == '/':
         settings.storage_directory = settings.storage_directory[:-1]
+    if settings.mps_dir[-1] == '/':
+        settings.mps_dir = settings.mps_dir[:-1]
 
     # Set Jinja2 environment
     if os.path.exists(settings.path_to_templates):

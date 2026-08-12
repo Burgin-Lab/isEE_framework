@@ -107,7 +107,8 @@ def process(thread, running, allthreads, settings, inp_override=''):
                          'mps': '{{ mps }}',
                          'min_inp': min_inp,
                          'heat_inp': heat_inp,
-                         'isee_titrate': isee_titrate_path}
+                         'isee_titrate': isee_titrate_path,
+                         'mps_dir': settings.mps_dir}
 
         filled = template.render(these_kwargs)
         newfilename = thread.name + '_' + name + degen + '.' + settings.batch_system

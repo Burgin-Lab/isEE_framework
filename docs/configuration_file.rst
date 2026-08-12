@@ -13,6 +13,31 @@ The contents of the configuration file are read line-by-line into isEE_framework
 
    configuration_file.rst
 
+Here's a minimal example configuration file, for reference. You don't want to use this file directly, but it should help you get started and to get a sense of the formatting.
+
+
+    .. code-block:: python
+
+        batch_system = 'slurm'
+        restart = True
+        overwrite = False
+        init_topology = 'myprotein.prmtop'
+        working_directory = 'new_working_directory'
+        algorithm = 'random'
+
+        path_to_input_files = 'isee_input_files'
+        path_to_templates = 'templates_mps'
+
+        walltime = '2:00:00'
+
+        initial_coordinates = ['input.rst7']
+        nvidia_mps = 3
+        mps_dir = '/home/mps_temp_files'
+
+        hmr = True
+        pH = 7.4
+        skip_wt = False
+        max_plurality = 2
 
 Core Settings
 -------------
@@ -216,6 +241,10 @@ isEE_framework is configured to maximize the overall throughput of MD simulation
 ``mps_patient``
 
     A boolean indicating whether each thread of simulations should execute all of its jobs in each step right away, or if sets of simulations fewer than ``nvidia_mps`` should hold off until another thread produces additional steps that can be used to fill the batch job up to ``nvidia_mps`` independent simulations. In other words, setting this to ``True`` prioritizes maximum efficiency in resource usage at the cost of potentially leaving some resources idle while other jobs finish, whereas setting it to ``False`` prioritizes not making any threads wait on one another at the cost of potentially using less than 100% of a given GPU at a time. In making your selection for this option, consider whether ``degeneracy`` is divisible by ``nvidia_mps``. Default = True
+
+``mps_dir``
+
+    A string that fills the corresponding template slot in batch template files using MPS. Point to a path somewhere that you want MPS to store its bookkeeping files. You don't need to look at these, they just keep it from stepping on its own toes. Put it somewhere you can read and write to/from quickly, but the files themselves are small and temporary.
 
 
 Charge Initialization Settings
