@@ -266,9 +266,42 @@ class Random(Algorithm):
         WT_seq = [str(int(str(atom).replace('-CA', '')[3:]) + 1) + str(atom)[0:3] for atom in
                   mdtraj.load_prmtop(settings.init_topology).atoms if (atom.residue.is_protein and (atom.name == 'CA'))]
 
+        def is_mutable(resid):
+            # Check whether a given residue index position is allowed to be mutated
+            if resid in settings.immutable:
+                return False
+            if all(settings.homomeric_ranges[0] > 0):
+                if all([len(r) == 2 for r in settings.homomeric_ranges]):
+                    if not settings.homomeric_ranges[0][0] <= resid <= settings.homomeric_ranges[0][1]:
+                        return False
+                else:
+                    try:
+                        assert all([len(r) == 3 for r in settings.homomeric_ranges])
+                    except AssertionError:
+                        raise RuntimeError(
+                            'One or more ranges in homomeric_ranges appears to have been given a label, but '
+                            'not every range has a label. Every range must either be labeled or unlabeled.')
+
+                    separated_ranges = []
+                    separated_labels = []
+                    for r in settings.homomeric_ranges:
+                        if not r[2] in separated_labels:
+                            separated_labels.append(r[2])
+                            separated_ranges.append([])
+                            separated_ranges[-1].append(r)
+                        else:
+                            separated_ranges[separated_labels.index(r[2])].append(r)
+
+                    for this_ranges in separated_ranges:
+                        if this_ranges[0][0] <= resid <= this_ranges[0][1]:
+                            return True
+                    return False
+
+            return True
+
         # First, build list of all possible single mutants:
         single_muts = [[str(int(resid + 1)) + res for res in all_resnames] for resid in range(len(WT_seq))
-                       if not resid + 1 in settings.immutable]
+                       if is_mutable(resid + 1)]
         single_muts_temp = []
         for item in single_muts:  # combine lists
             single_muts_temp += item

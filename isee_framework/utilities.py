@@ -127,10 +127,58 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
         Path to the newly created, mutated topology file corresponding to new_coords, named as name + '.prmtop'
 
     """
-    # if len(name) > 200:
-    #     print('WARNING: variant name is too long (>200 characters). Truncating. This may cause collisions if another '
-    #           'name has the same first 200 characters. Offending name: ' + name)
-    #     name = name[:200]
+    # Handle modifying mutation list if homomeric_ranges is provided:
+    if all(settings.homomeric_ranges[0] > 0):
+        homomer_muts = []
+        not_homomer_muts = []
+        if len(settings.homomeric_ranges) < 2:
+            raise RuntimeError('homomeric_ranges has been provided, but at least two ranges of residue indices are '
+                               'required (the first is the range to template other ranges to)')
+
+        # If range labels are provided, separate homomeric_ranges into groups of like-labeled ranges
+        if all([len(r) == 2 for r in settings.homomeric_ranges]):
+            separated_ranges = copy.copy(settings.homomeric_ranges)
+        else:
+            try:
+                assert all([len(r) == 3 for r in settings.homomeric_ranges])
+            except AssertionError:
+                raise RuntimeError('One or more ranges in homomeric_ranges appears to have been given a label, but '
+                                   'not every range has a label. Every range must either be labeled or unlabeled.')
+            separated_ranges = []
+            separated_labels = []
+            for r in settings.homomeric_ranges:
+                if not r[2] in separated_labels:
+                    separated_labels.append(r[2])
+                    separated_ranges.append([])
+                    separated_ranges[-1].append(r)
+                else:
+                    separated_ranges[separated_labels.index(r[2])].append(r)
+
+        for this_ranges in separated_ranges:
+            for range_i in range(len(this_ranges)):
+                if range_i == 0:
+                    for mut in mutation:    # build list of mutations not falling inside the initial range
+                        mut_index = int(mut[:-3])
+                        if not int(this_ranges[0][0]) <= mut_index <= int(this_ranges[0][1]):
+                            not_homomer_muts.append(mut)
+                else:
+                    try:    # check that the ranges are of the same length
+                        assert (int(this_ranges[range_i][1]) - int(this_ranges[range_i][0]) ==
+                                int(this_ranges[0][1]) - int(this_ranges[0][0]))
+                    except AssertionError:
+                        raise RuntimeError('homomeric_ranges contains a range of a different length from the first '
+                                           'provided range for this group at index ' + str(range_i))
+                    for mut in mutation:
+                        if mut in not_homomer_muts:     # skip mutations not falling inside the initial range
+                            continue
+                        mut_target = mut[-3:]
+                        mut_index = int(mut[:-3])
+                        offset = int(this_ranges[range_i][0]) - int(this_ranges[0][0])
+                        new_mut = str(mut_index + offset) + mut_target
+                        homomer_muts.append(new_mut)
+
+        mutation += homomer_muts
+        print(mutation)
 
     # So this is dumb but this function sometimes fails at or before tleap and merely needs to be rerun, most recently
     # due to an error in writing the .mol2 files below (one of them just stopped writing mid-stream for some reason.)
@@ -419,7 +467,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
                 # mutator = MutateResidue( mutant_position , mutant_aa )
                 # mutator.apply( test_pose )
                 #
-                # Code adapted by Tucker E. Burgin from Evan H. Baugh, in turn adapted from Sid Chaudhury.
+                # Code adapted by T. Emme Burgin from Evan H. Baugh, in turn adapted from Sid Chaudhury.
 
                 if pose.is_fullatom() == False:
                     raise IOError('mutate_residue only works with fullatom poses')
@@ -628,7 +676,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
         mutated_top = set_charges(mutated_top)
 
     if settings.min_steps > 0:
-        raise RuntimeError('OpenMM minimization temporarily disabled.')
+        raise RuntimeError('OpenMM minimization is currently not supported; please set min_steps to 0.')
         ### Minimize with OpenMM
         # First, cast .prmtop to OpenMM topology todo: replace Amber-specific stuff with call to method of MDEngine that returns an OpenMM Simulation object
         openmm_top = AmberPrmtopFile(mutated_top)

@@ -122,6 +122,28 @@ Basic Optional Settings
 
     A boolean. Governs whether to apply hydrogen mass repartioning (with the default factor of 3) to each model after mutating. If set to True, MD simulation timesteps up to 4 fs are likely to be stable, but this can break certain models. Default = False
 
+``homomeric_ranges``
+
+    A list of lists of integers. This setting can be used to automatically apply the same mutations to multiple homomeric copies of a protein chain in the same structure, which is especially useful in combination with the ``random`` algorithm. Each nested list should indicate the first and last residue indices, respectively, in each homomeric copy. For example, if your structure is a homotrimer where each unit is 100 residues in length, you might set:
+
+    .. code-block:: python
+
+        homomeric_ranges = [[1,100], [101,200], [201, 300]]
+
+    Mutations applied to residues in the first range are then carried over to the corresponding residues in the following ranges. If any additional mutations are applied to residues not in the first range, they will be applied as normal but not duplicated. Note that file names based on additional mutations applied in this way will not reflect these additional mutations.
+
+    If your model is comprised of multiple different homomeric complexes, you can also handle each set of homomers independently by supplying an arbitrary third index as a label, e.g., for a homodimer of heterodimers with unit lengths of 50 and 100 residues, respectively,
+
+    .. code-block:: python
+
+        homomeric_ranges = [[1,50,0], [51,150,1], [151,200,0], [201,300,1]]
+
+    In this case, each group sharing a label has mutations copied from the first group bearing that label to the rest.
+
+    If this option is used along with the ``random`` algorithm, then randomly selected mutations will be confined to the first range in each label group (and then propagated to the rest of the ranges).
+
+    Note that, strictly speaking, the ranges specified as 'homomers' in this setting do not need to actually have the same amino acid sequences. However, an error will be raised if any of the lists in ``homomeric_ranges`` contains a different number of entries than the others, or if any of the ranges that share a label are of different lengths.
+
 ``treat_as_protein``
 
     A list of strings. Used to force isEE_framework to treat non-standard residue names as part of the protein for the purposes of applying mutations and building models. Useful for models containing modified residues or prosthetic groups, almost always in conjunction with ``paths_to_forcefields``. Default = ['']

@@ -91,6 +91,7 @@ def process(thread, running, allthreads, settings, inp_override=''):
 
         these_kwargs = { 'name': thread.name + '_' + name + degen,
                          'nodes': eval('settings.nodes'),
+                         'ppn': eval('settings.ppn'),
                          'taskspernode': eval('settings.ppn'),
                          'walltime': eval('settings.walltime'),
                          'mem': eval('settings.mem'),
