@@ -110,6 +110,7 @@ def configure(input_file, user_working_directory=''):
         mps_patient: bool = True    # if True, optimizes MPS efficiency by allowing different threads to use a single MPS job
         mps_dir: str = ''   # Path to where to store mps files
         name_as_timestamp: bool = False     # if True, default naming convention for files uses timestamp at creation
+        homomeric_ranges: typing.List[typing.List[int]] = [[-1, -1]]   # lists of ranges of residue indices to treat as homomers and apply the same mutations to
 
         # Custom Amber force fields, if required
         paths_to_forcefields: typing.List[str] = ['']

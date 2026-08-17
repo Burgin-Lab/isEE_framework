@@ -354,6 +354,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
         ### Mutate
         # First, reset all titrations
         # Rename all ASH -> ASP, GLH -> GLU, and HIP, HID, and HIE -> HIS
+        # Also rename CYX to CYS if rosetta_mutate is to be used
         temp_titrations = []
         for line in fileinput.input(name + '_prot.pdb', inplace=True):
             if not titrations:  # if we don't have new, explicit titrations, we want to save the old ones
@@ -365,12 +366,21 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
                         'HID', 'HIS').replace(
                         'HIE', 'HIS'), line.split()[4], line.split()[3]])
 
-            print(line.replace(
-                ' ASH ', ' ASP ').replace(
-                ' GLH ', ' GLU ').replace(
-                ' HIP ', ' HIS ').replace(
-                ' HID ', ' HIS ').replace(
-                ' HIE ', ' HIS '), end='')
+            if settings.rosetta_mutate:
+                print(line.replace(
+                    ' ASH ', ' ASP ').replace(
+                    ' GLH ', ' GLU ').replace(
+                    ' HIP ', ' HIS ').replace(
+                    ' HID ', ' HIS ').replace(
+                    ' HIE ', ' HIS ').replace(
+                    ' CYX ', ' CYS '), end='')
+            else:
+                print(line.replace(
+                    ' ASH ', ' ASP ').replace(
+                    ' GLH ', ' GLU ').replace(
+                    ' HIP ', ' HIS ').replace(
+                    ' HID ', ' HIS ').replace(
+                    ' HIE ', ' HIS '), end='')
         pdb_to_modify = name + '_prot.pdb'
         if temp_titrations:
             titrations = temp_titrations
@@ -461,7 +471,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
 
                 return result
 
-            init_string = '-corrections::beta_nov16'
+            init_string = '-corrections::beta_nov16 -in:detect_disulf true'
             if not settings.rosetta_override == ['']:   # bool(['']) == True, surprisingly
                 init_string += ' -PDB_components_overrides ' + ' '.join(settings.rosetta_override)
             pyrosetta.init(init_string)  # initialize with corrections for beta_nov16 weights
