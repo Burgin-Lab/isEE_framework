@@ -108,9 +108,9 @@ def main(rst, top):
     mol = Molecule(pdbname)
     with pytraj.utils.context.capture_stdout() as out:  # handy pytraj utility catches C output streams
         try:
-            molPrep, prepData = systemPrepare(mol, pH=settings.pH, return_details=True, ignore_ns_errors=True)
-        except TypeError:   # to handle later versions that remove ignore_ns_errors option
-            molPrep, prepData = systemPrepare(mol, pH=settings.pH, return_details=True)
+            _, prepData = systemPrepare(mol, pH=settings.pH, return_details=True, ignore_ns_errors=True)
+        except TypeError:   # to handle later versions that remove ignore_ns_errors option and output three things
+            _, _, prepData = systemPrepare(mol, pH=settings.pH, return_details=True)
 
     # Extract desired information from produced prepData object
     titrations = []

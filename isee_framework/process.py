@@ -128,6 +128,8 @@ def process(thread, running, allthreads, settings, inp_override=''):
         jobtype.update_history(thread, settings, **these_kwargs)
 
     # Support for NVIDIA MPS
+    # todo: there is some error here when nvidia_mps > 1, mps_patient = False, and the number of threads is less than
+    # todo: nvidia_mps, where mps_combine doesn't seem to be called and the job gets submitted with {{ mps }} unfilled
     if settings.nvidia_mps > 1:
         # Write names of batchfiles to temporary 'queue' file to track while awaiting submission
         if not os.path.exists('mps_batchqueue.temp'):
@@ -139,7 +141,7 @@ def process(thread, running, allthreads, settings, inp_override=''):
         readlines = open('mps_batchqueue.temp').readlines()
         if settings.nvidia_mps > 1 and (not settings.mps_patient or len(readlines) >= settings.nvidia_mps):
             # Pull batch file names out of the temporary queue file to prepare to submit
-            n_tosubmit = len(readlines) - (len(readlines) % settings.nvidia_mps)    # number of filenames to pull out
+            n_tosubmit = min([len(readlines), settings.nvidia_mps])    # number of filenames to pull out
             tosubmit = [line.split()[0] for line in readlines[:n_tosubmit]]
             threadis = [int(line.split()[1]) for line in readlines[:n_tosubmit]]
             try:

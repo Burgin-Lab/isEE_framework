@@ -128,7 +128,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
 
     """
     # Handle modifying mutation list if homomeric_ranges is provided:
-    if all(settings.homomeric_ranges[0] > 0):
+    if all([item > 0 for item in settings.homomeric_ranges[0]]):
         homomer_muts = []
         not_homomer_muts = []
         if len(settings.homomeric_ranges) < 2:
@@ -519,7 +519,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
 
                 return result
 
-            init_string = '-corrections::beta_nov16'# -in:detect_disulf true'
+            init_string = '-corrections::beta_nov16 -in:detect_disulf true'
             if not settings.rosetta_override == ['']:   # bool(['']) == True, surprisingly
                 init_string += ' -PDB_components_overrides ' + ' '.join(settings.rosetta_override)
             pyrosetta.init(init_string)  # initialize with corrections for beta_nov16 weights
