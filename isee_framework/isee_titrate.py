@@ -15,7 +15,7 @@ import warnings
 import fileinput
 from contextlib import contextmanager
 from moleculekit.molecule import Molecule
-from moleculekit.tools.preparation import proteinPrepare, systemPrepare
+from moleculekit.tools.preparation import systemPrepare
 from isee_framework.utilities import mutate
 
 
@@ -104,11 +104,13 @@ def main(rst, top):
     #         are_we_there_yet = True
     # os.remove(pdbname[:-3] + 'pka')
 
-    # Run moleculekit.proteinPrepare and prepare titrations list
+    # Run moleculekit.systemPrepare and prepare titrations list
     mol = Molecule(pdbname)
-    #mol = systemPrepare(mol, ignore_ns_errors=True)
     with pytraj.utils.context.capture_stdout() as out:  # handy pytraj utility catches C output streams
-        molPrep, prepData = systemPrepare(mol, pH=settings.pH, return_details=True, ignore_ns_errors=True)
+        try:
+            molPrep, prepData = systemPrepare(mol, pH=settings.pH, return_details=True, ignore_ns_errors=True)
+        except TypeError:   # to handle later versions that remove ignore_ns_errors option
+            molPrep, prepData = systemPrepare(mol, pH=settings.pH, return_details=True)
 
     # Extract desired information from produced prepData object
     titrations = []

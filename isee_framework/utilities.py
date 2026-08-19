@@ -519,7 +519,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
 
                 return result
 
-            init_string = '-corrections::beta_nov16 -in:detect_disulf true'
+            init_string = '-corrections::beta_nov16'# -in:detect_disulf true'
             if not settings.rosetta_override == ['']:   # bool(['']) == True, surprisingly
                 init_string += ' -PDB_components_overrides ' + ' '.join(settings.rosetta_override)
             pyrosetta.init(init_string)  # initialize with corrections for beta_nov16 weights
