@@ -52,11 +52,12 @@ setup(
 
     # Additional entries you may want simply uncomment the lines you want and fill in the data
     # url='http://www.my_package.com',  # Website
-    install_requires=['numpy~=1.24.3',
-                      'pytraj~=2.0.6',
+    install_requires=['numpy>=2.0',
+                      'pymbar',
+                      'scipy',
                       'mdtraj',
-                      'pandas~=2.1.1',
-                      'parmed~=4.2.2',
+                      'pandas~=2.0',
+                      'parmed>=4.0',
                       'filelock',
                       'setuptools',
                       'moleculekit',
