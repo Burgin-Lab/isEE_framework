@@ -10,6 +10,8 @@ Framework for high-throughput MD simulations of protein variants with Amber.
 
 For internal use. Not currently configured for public consumption.
 
+Documentation located at: docs/build/html/index.html
+
 
 ### Copyright
 
