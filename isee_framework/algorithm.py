@@ -270,7 +270,7 @@ class Random(Algorithm):
             # Check whether a given residue index position is allowed to be mutated
             if resid in settings.immutable:
                 return False
-            if all(settings.homomeric_ranges[0] > 0):
+            if all(item > 0 for item in settings.homomeric_ranges[0]):
                 if all([len(r) == 2 for r in settings.homomeric_ranges]):
                     if not settings.homomeric_ranges[0][0] <= resid <= settings.homomeric_ranges[0][1]:
                         return False
@@ -280,7 +280,7 @@ class Random(Algorithm):
                     except AssertionError:
                         raise RuntimeError(
                             'One or more ranges in homomeric_ranges appears to have been given a label, but '
-                            'not every range has a label. Every range must either be labeled or unlabeled.')
+                            'not every range has a label. Either every range must be labeled, or none of them can be.')
 
                     separated_ranges = []
                     separated_labels = []

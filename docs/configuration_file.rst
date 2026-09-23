@@ -194,7 +194,7 @@ For the ``random`` algorithm, which applies randomly selected mutations. A rando
 
 ``immutable``
 
-    A list of integer positions where mutations will never be applied. The integers should correspond to the positions as they are indexed in the topology file. Use this setting to prevent mutations in positions that you aren't interested in exploring. Default = []
+    A list of integer positions where mutations will never be applied, 1-indexed and in the same order the residues appear in the topology file. Use this setting to prevent mutations in positions that you aren't interested in changing. Default = []
 
 ``max_steps_per_thread``
 
