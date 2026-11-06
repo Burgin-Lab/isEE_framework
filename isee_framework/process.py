@@ -119,7 +119,7 @@ def process(thread, running, allthreads, settings, inp_override=''):
                 newfile.close()
         except OSError as e:
             if 'name too long' in str(e):
-                raise RuntimeError('Encountered too-long filename: ' + newfilename + '. You can avoid this by setting'
+                raise RuntimeError('Encountered too-long filename: ' + newfilename + '. You can avoid this by setting '
                                    'name_as_timestamp = True in the config file.')
             else:
                 raise e

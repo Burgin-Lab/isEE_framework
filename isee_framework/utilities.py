@@ -529,6 +529,7 @@ def mutate(coords, topology, mutation, name, settings, titrations=[]):
             mypose = pose_from_file(name + '_prot.pdb', opt, False, pyrosetta.rosetta.core.import_pose.PDB_file)    # load pdb file
             for mut in mutation:        # apply each mutation
                 if mut:     # specifically fixes issue with wild type (mut == '')
+                    print(mut, flush=True)
                     resid = int(mut[:-3])
                     target = convert_3_1(mut[-3:])
                     mypose = mutate_residue(mypose, resid, target, pack_radius=8, settings=settings)  # here's where the actual mutation is performed
@@ -845,16 +846,16 @@ def muts_to_current_name(thread, settings):
     """
 
     def get_timestamp():
-        if not os.path.exists('timestamp_name_list.txt'):
-            open('timestamp_name_list.txt', 'w').close()
+        if not os.path.exists(settings.working_directory + '/timestamp_name_list.txt'):
+            open(settings.working_directory + '/timestamp_name_list.txt', 'w').close()
 
-        for line in open('timestamp_name_list.txt', 'r').readlines():
+        for line in open(settings.working_directory + '/timestamp_name_list.txt', 'r').readlines():
             if thread.name + '_' + '_'.join(thread.history.muts[-1]) in line:
                 return line.split()[1]
 
         timestamp = str(time.time())
-        open('timestamp_name_list.txt', 'a').write(
-            thread.name + '_' + '_'.join(thread.history.muts[-1]) + '\t' + timestamp)
+        open(settings.working_directory + '/timestamp_name_list.txt', 'a').write(
+            thread.name + '_' + '_'.join(thread.history.muts[-1]) + '\t' + timestamp + '\n')
 
         return timestamp
 

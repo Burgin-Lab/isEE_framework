@@ -162,11 +162,11 @@ def init_threads(settings):
                         assert thread.history.tops[-1] == new_top
                     except AssertionError:
                         raise RuntimeError('Tried to rebuild mutant coordinates and topology for mutation: ' +
-                                           thread.history.muts[-1] + ' but the resulting files did not match the names of '
-                                           'the files in the corresponding thread.\n New filenames:' +
+                                           str(thread.history.muts[-1]) + ' but the resulting files did not match the '
+                                           'names of the files in the corresponding thread.\n New filenames:' +
                                            '\n ' + new_inpcrd +
                                            '\n ' + new_top +
-                                           'Expected filenames:' +
+                                           '\nExpected filenames:' +
                                            '\n ' + thread.history.inpcrd[-1] +
                                            '\n ' + thread.history.tops[-1])
 
